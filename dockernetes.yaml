@@ -4,7 +4,7 @@ preferences: {}
 current-context: dockernetes@Dockernetes
 clusters:
 - cluster:
-    server: http://localhost:8000
+    server: http://127.0.0.1:8000
   name: !!str Dockernetes
 contexts:
 - context:
