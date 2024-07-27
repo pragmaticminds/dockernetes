@@ -1,14 +1,26 @@
 import datetime
-from typing import Iterable, Optional
+import logging
+import ssl
+from typing import Iterable, Optional, Annotated
 
 import docker
+import jwt
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import serialization
 from docker.models.containers import Container
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends
 from fastapi.responses import PlainTextResponse
+from fastapi.security import OAuth2PasswordBearer
+import cryptography
 
 import utils
 
+logger = logging.getLogger(__name__)
+
 app = FastAPI()
+
+ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+ssl_context.load_cert_chain('dockernetes.crt', keyfile='dockernetes.key')
 
 """
 INFO:     None:0 - "GET /apis/networking.k8s.io HTTP/1.1" 404 Not Found
@@ -17,11 +29,51 @@ INFO:     None:0 - "GET /api/v1/namespaces?limit=500 HTTP/1.1" 404 Not Found
 INFO:     None:0 - "GET /apis/extensions HTTP/1.1" 404 Not Found
 """
 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+# load keys
+with open("dockernetes_jwt.crt", "rb") as f:
+    public_key = f.read()
+with open("dockernetes_jwt.pem", "rb") as f:
+    private_key = f.read()
+
+
+def user(token: str = Depends(oauth2_scheme)) -> str:
+    try:
+        content = jwt.decode(token, key=public_key, algorithms=["RS256"])
+        return content["sub"]
+    except jwt.ExpiredSignatureError:
+        raise RuntimeError("Token has expired")
+    except jwt.InvalidTokenError:
+        raise RuntimeError("Token is invalid")
+
+@app.middleware("auth")
+async def check_jwt_token(request: Request, call_next):
+    """
+    Extracts the user information from the Bearer Token and adds it to the request scope
+    """
+    # Get auth header
+    auth_header = request.headers.get("Authorization")
+    if not auth_header or not auth_header.startswith("Bearer "):
+        return PlainTextResponse("Unauthorized", status_code=401)
+    _, token = auth_header.split(" ", 1)
+
+    # Now we have the token and check it
+    try:
+        content = jwt.decode(token, key=public_key, algorithms=["RS256"])
+    except jwt.ExpiredSignatureError:
+        return PlainTextResponse("Token has Expired", status_code=401)
+    except jwt.InvalidTokenError:
+        return PlainTextResponse("Token Invalid", status_code=401)
+
+    request.scope["user"] = content["sub"]
+
+    logging.debug("User %s accessing %s", content["sub"], request.url.path)
+
+    return await call_next(request)
 
 @app.get("/api/v1/namespaces")
 async def list_namespaces():
-    # Get all namespaces
-    # default + all compose projects
     namespaces = ["default"]
 
     client = docker.from_env()

@@ -21,3 +21,13 @@ export KUBECONFIG=dockernetes.yaml
 and then
 
 **Have fun**
+
+# Explanaition of all the key-stuff
+
+`myCA.*` is the CA for the SSH Certs for the https auth of the cluster.
+
+`dockernetes.*` is all the ssl-related stuff.
+The CA (which is also in the yaml), the csr and finally the crt.
+See also `sign_certs.sh`.
+
+For JWT we also use RSA with the `dockernetes_jwt.*` files.

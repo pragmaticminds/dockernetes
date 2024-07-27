@@ -12,6 +12,37 @@ def d2k_status(container: Container):
     else:
         return "Unknown"
 
+def d2k_conditions(container: Container):
+    if container.status == ("running"):
+        return [
+                    {
+                        "type": "Initialized",
+                        "status": "True",
+                        "lastProbeTime": "2024-07-20T14:18:05Z",
+                        "lastTransitionTime": "2024-07-20T14:18:05Z"
+                    },
+                    {
+                        "type": "Ready",
+                        "status": "True",
+                        "lastProbeTime": "2024-07-20T14:18:05Z",
+                        "lastTransitionTime": "2024-07-20T14:19:23Z"
+                    },
+                    {
+                        "type": "ContainersReady",
+                        "status": "True",
+                        "lastProbeTime": "2024-07-20T14:18:05Z",
+                        "lastTransitionTime": "2024-07-20T14:19:23Z"
+                    },
+                    {
+                        "type": "PodScheduled",
+                        "status": "True",
+                        "lastProbeTime": "2024-07-20T14:18:05Z",
+                        "lastTransitionTime": "2024-07-20T14:18:05Z"
+                    }
+                ]
+    return []
+
+
 
 # Also map the docker restart policy to kubernetes
 def d2k_restart_policy(docker_restart_policy: str):
@@ -165,32 +196,7 @@ def d2k_container(container: Container):
         },
         "status": {
             "phase": d2k_status(container),
-            # "conditions": [
-            #     {
-            #         "type": "Initialized",
-            #         "status": "True",
-            #         "lastProbeTime": "2024-07-20T14:18:05Z",
-            #         "lastTransitionTime": "2024-07-20T14:18:05Z"
-            #     },
-            #     {
-            #         "type": "Ready",
-            #         "status": "True",
-            #         "lastProbeTime": "2024-07-20T14:18:05Z",
-            #         "lastTransitionTime": "2024-07-20T14:19:23Z"
-            #     },
-            #     {
-            #         "type": "ContainersReady",
-            #         "status": "True",
-            #         "lastProbeTime": "2024-07-20T14:18:05Z",
-            #         "lastTransitionTime": "2024-07-20T14:19:23Z"
-            #     },
-            #     {
-            #         "type": "PodScheduled",
-            #         "status": "True",
-            #         "lastProbeTime": "2024-07-20T14:18:05Z",
-            #         "lastTransitionTime": "2024-07-20T14:18:05Z"
-            #     }
-            # ],
+            "conditions": d2k_conditions(container),
             "hostIP": "127.0.0.1",
             "podIP": container.attrs["NetworkSettings"]["IPAddress"],
             # "podIPs": [
@@ -435,6 +441,6 @@ def generate_pod_entry(name: str, generate_name: str, namespace: str, uid: str, 
                     "started": True
                 }
             ],
-            "qosClass": "Guaranteed"
+            "qosClass": "Guaranteed",
         }
     }
