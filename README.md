@@ -1,5 +1,7 @@
 # Dockernetes
 
+![Dockernetes](logos/_96eacb8b-5bd5-4eab-9153-764d43d174fc.jpg)
+
 This brings the simplicity of Kubernetes Monitoring to docker.
 
 ## Running the API
