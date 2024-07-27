@@ -35,3 +35,21 @@ For JWT we also use RSA with the `dockernetes_jwt.*` files.
 # Issue cusstom kubernetes configs
 
 Just copy the `dockernetes.yaml` file and simply replace the "token" in the last line with the output of a call to `generate_token.py <username>` (this is not really relevant but makes the logging a bit nicer). 
+
+# Generate new Certs / CSRs for new deployments
+
+First, generate a private key
+```bash
+openssl genrsa -out dockernetes.key 2048 
+```
+then a CSR
+```bash
+ openssl req -new -key dockernetes.key -out dockernetes.csr 
+```
+then update the ext file
+`dockernetes.ext` witht he right IP
+
+Finally, sign the cert
+```bash
+openssl x509 -req -in dockernetes.csr -CA myCA.pem -CAkey myCA.key -CAcreateserial -out dockernetes.crt -days 500 -sha256 -extfile dockernetes.ext
+```
