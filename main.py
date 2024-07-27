@@ -1716,6 +1716,20 @@ async def pods(namespace: str, pod: str):
         }
     raise Exception("Pod not found")
 
+@app.delete("/api/v1/namespaces/{namespace}/pods/{pod}")
+async def delete_pod(namespace: str, pod: str):
+    """
+    Delete a pod
+    """
+    client = docker.from_env()
+    containers: Iterable[Container] = client.containers.list(all=True)
+
+    for container in containers:
+        if container.name != pod:
+            continue
+        container.restart()
+        return {"message": f"Pod {pod} deleted"}
+    raise Exception("Pod not found")
 
 @app.get("/api/v1/namespaces/{namespace}/pods/{pod}/log", response_class=PlainTextResponse, )
 async def pod_logs(namespace: str, pod: str, container: str = ""):
