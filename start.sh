@@ -1,0 +1,2 @@
+# This script starts the uvicorn server. Please adjust your parameters accodringly
+uvicorn main:app --port 6443 --ssl-keyfile certs/180/dockernetes_180.key --ssl-certfile certs/180/dockernetes_180.crt --host 0.0.0.0
