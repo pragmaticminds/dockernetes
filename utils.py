@@ -126,7 +126,7 @@ def d2k_container(container: Container):
             "containers": [
                 {
                     "name": container.name,
-                    "image": container.image.attrs["RepoTags"][0],
+                    "image": container.image.attrs["RepoTags"][0] if len(container.image.attrs["RepoTags"]) > 0 else "",
                     "args": container.attrs["Args"],
                     "env": d2k_env_variables(container.attrs["Config"]["Env"]),
                     # "envFrom": [

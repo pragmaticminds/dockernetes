@@ -53,3 +53,15 @@ Finally, sign the cert
 ```bash
 openssl x509 -req -in dockernetes.csr -CA myCA.pem -CAkey myCA.key -CAcreateserial -out dockernetes.crt -days 500 -sha256 -extfile dockernetes.ext
 ```
+
+# compress folder
+    
+    ```bash
+    tar -czvf dockernetes.tar.gz dockernetes
+    ```
+
+# decompress folder
+
+    ```bash
+    tar -xzvf dockernetes.tar.gz
+    ```
