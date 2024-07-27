@@ -31,3 +31,7 @@ The CA (which is also in the yaml), the csr and finally the crt.
 See also `sign_certs.sh`.
 
 For JWT we also use RSA with the `dockernetes_jwt.*` files.
+
+# Issue cusstom kubernetes configs
+
+Just copy the `dockernetes.yaml` file and simply replace the "token" in the last line with the output of a call to `generate_token.py <username>` (this is not really relevant but makes the logging a bit nicer). 
