@@ -47,7 +47,13 @@ then a CSR
  openssl req -new -key dockernetes.key -out dockernetes.csr 
 ```
 then update the ext file
-`dockernetes.ext` witht he right IP
+`dockernetes.ext` witht he right IP (or DNS).
+Beware that you need to write either
+```
+IP.1 = 192.168.167.180
+or
+DNS.1 = localhost
+```
 
 Finally, sign the cert
 ```bash

@@ -44,30 +44,30 @@ def user(token: str = Depends(oauth2_scheme)) -> str:
     except jwt.InvalidTokenError:
         raise RuntimeError("Token is invalid")
 
-@app.middleware("auth")
-async def check_jwt_token(request: Request, call_next):
-    """
-    Extracts the user information from the Bearer Token and adds it to the request scope
-    """
-    # Get auth header
-    auth_header = request.headers.get("Authorization")
-    if not auth_header or not auth_header.startswith("Bearer "):
-        return PlainTextResponse("Unauthorized", status_code=401)
-    _, token = auth_header.split(" ", 1)
-
-    # Now we have the token and check it
-    try:
-        content = jwt.decode(token, key=public_key, algorithms=["RS256"])
-    except jwt.ExpiredSignatureError:
-        return PlainTextResponse("Token has Expired", status_code=401)
-    except jwt.InvalidTokenError:
-        return PlainTextResponse("Token Invalid", status_code=401)
-
-    request.scope["user"] = content["sub"]
-
-    logging.debug("User %s accessing %s", content["sub"], request.url.path)
-
-    return await call_next(request)
+# @app.middleware("auth")
+# async def check_jwt_token(request: Request, call_next):
+#     """
+#     Extracts the user information from the Bearer Token and adds it to the request scope
+#     """
+#     # Get auth header
+#     auth_header = request.headers.get("Authorization")
+#     if not auth_header or not auth_header.startswith("Bearer "):
+#         return PlainTextResponse("Unauthorized", status_code=401)
+#     _, token = auth_header.split(" ", 1)
+#
+#     # Now we have the token and check it
+#     try:
+#         content = jwt.decode(token, key=public_key, algorithms=["RS256"])
+#     except jwt.ExpiredSignatureError:
+#         return PlainTextResponse("Token has Expired", status_code=401)
+#     except jwt.InvalidTokenError:
+#         return PlainTextResponse("Token Invalid", status_code=401)
+#
+#     request.scope["user"] = content["sub"]
+#
+#     logging.debug("User %s accessing %s", content["sub"], request.url.path)
+#
+#     return await call_next(request)
 
 @app.get("/api/v1/namespaces")
 async def list_namespaces():
@@ -101,7 +101,7 @@ async def namespaces(namespace: str):
 
 
 @app.get("/api")
-async def api():
+async def api(request:Request):
     return {
         "kind": "APIVersions",
         "versions": [
@@ -110,7 +110,7 @@ async def api():
         "serverAddressByClientCIDRs": [
             {
                 "clientCIDR": "0.0.0.0/0",
-                "serverAddress": "localhost:8080"
+                "serverAddress": f"{request.base_url.hostname}:{request.base_url.port}"
             }
         ]
     }
