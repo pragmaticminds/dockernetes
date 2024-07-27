@@ -4,6 +4,16 @@
 
 This brings the simplicity of Kubernetes Monitoring to docker.
 
+## Setup and generation of certs and kubeconfig
+
+Before the first start run the `setup.py` file to generate all necessary certs and generate the approriate kubeconfig file for you.
+
+```bash
+python setup.py <hostname> (<username>)
+```
+
+If you omit the username no kubeconfig.yaml will be generated.
+
 ## Running the API
 
 Just run the FastAPI
