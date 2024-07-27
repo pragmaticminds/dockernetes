@@ -7,7 +7,7 @@ This brings the simplicity of Kubernetes Monitoring to docker.
 Just run the FastAPI
 
 ```bash
-uvicorn main:app
+uvicorn main:app --port 6443 --ssl-keyfile dockernetes.key --ssl-certfile dockernetes.crt --host 0.0.0.0
 ```
 
 ## Connecting to the cluster
