@@ -68,9 +68,9 @@ def d2k_container_state(container: Container):
                                                                   container.attrs["State"][
                                                                       "StartedAt"] != "" else "2024-07-20T14:18:05Z",
         }}
-        print("========")
-        print(response)
-        print("========")
+        # print("========")
+        # print(response)
+        # print("========")
         return response
     elif container.status == "exited":
         return {"terminated": {
