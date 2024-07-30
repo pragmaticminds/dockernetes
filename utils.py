@@ -62,10 +62,16 @@ def d2k_restart_policy(docker_restart_policy: str):
 
 def d2k_container_state(container: Container):
     if container.status == "running":
-        return {"running": {
+        response = {"running": {
             # TODO why is this empty sometimes?
-            "startedAt": container.attrs["State"]["StartedAt"] if container.attrs["State"]["StartedAt"] is not None and container.attrs["State"]["StartedAt"] != "" else "2024-07-20T14:18:05Z",
+            "startedAt": container.attrs["State"]["StartedAt"] if container.attrs["State"]["StartedAt"] is not None and
+                                                                  container.attrs["State"][
+                                                                      "StartedAt"] != "" else "2024-07-20T14:18:05Z",
         }}
+        print("========")
+        print(response)
+        print("========")
+        return response
     elif container.status == "exited":
         return {"terminated": {
             "exitCode": container.attrs["State"]["ExitCode"],

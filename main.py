@@ -1054,9 +1054,9 @@ def generate_podlist_from_docker(namespace: Optional[str] = None):
 
     response = {"kind": "PodList", "apiVersion": "v1", "metadata": {"resourceVersion": "38729623520"}, "items": pods}
 
-    print("===============")
-    print(response)
-    print("===============")
+    # print("===============")
+    # print(response)
+    # print("===============")
 
     return response
 
