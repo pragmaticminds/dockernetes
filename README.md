@@ -19,7 +19,7 @@ If you omit the username no kubeconfig.yaml will be generated.
 Just run the FastAPI
 
 ```bash
-uvicorn main:app --port 6443 --ssl-keyfile dockernetes.key --ssl-certfile dockernetes.crt --host 0.0.0.0
+uvicorn main:app --port 6443 --ssl-keyfile client.key --ssl-certfile client.crt --host 0.0.0.0
 ```
 
 ## Connecting to the cluster
