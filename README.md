@@ -4,6 +4,33 @@
 
 This brings the simplicity of Kubernetes Monitoring to docker.
 
+## Quickstart
+
+First, run the `setup.py` script to generate all necessary certs and kubeconfig file.
+
+```bash
+python setup.py <hostname> <username>
+```
+
+e.g.
+
+```bash
+python setup.py localhost julian
+```
+
+Then start the FastAPI server with the following command.
+
+```bash
+uvicorn main:app --port 6443 --ssl-keyfile client.key --ssl-certfile client.crt --host 0.0.0.0
+```
+
+Then use the newly generated `kubeconfig.yaml` file to connect to this "clusster".
+
+
+Then, run the FastAPI server with the following command.
+
+```bash
+
 ## Setup and generation of certs and kubeconfig
 
 Before the first start run the `setup.py` file to generate all necessary certs and generate the approriate kubeconfig file for you.
